@@ -414,8 +414,8 @@
         $tfoot.find('table.fht-table').addClass(settings.originalTable.attr('class'));
 
         // calculate width of the fixed columns from first fixedColumns header columns.
-        $firstRowThChildren = $fixedBody.find('.fht-thead thead tr > *:lt(' + settings.fixedColumns + ')');
-        fixedColumnWidth = settings.fixedColumns * tableProps.border;
+        $firstRowThChildren = $fixedBody.find('.fht-thead thead tr > *:lt(' + fixedColumns + ')');
+        fixedColumnWidth = fixedColumns * tableProps.border;
         $firstRowThChildren.each(function() {
           fixedColumnWidth += $(this).outerWidth(true);
         });
@@ -428,23 +428,23 @@
         // Fix cell heights, for each header row
         var headerRows = $fixedBody.find('.fht-thead thead tr');
         headerRows.each(function () {
-            var $rowThs = $(this).find('> *:lt(' + settings.fixedColumns + ')');
+            var $rowThs = $(this).find('> *:lt(' + fixedColumns + ')');
             $rowThs.each(function (index) {
                 helpers._fixHeightWithCss($(this), tableProps);
-                helpers._fixWidthWithCss($(this), tableProps, tdWidths[index % settings.fixedColumns] );
+                helpers._fixWidthWithCss($(this), tableProps, tdWidths[index % fixedColumns] );
             });
         });
 
-        firstTdChildrenSelector = 'tbody tr > *:not(:nth-child(n+' + (settings.fixedColumns + 1) + '))';
+        firstTdChildrenSelector = 'tbody tr > *:not(:nth-child(n+' + (fixedColumns + 1) + '))';
         $firstTdChildren = $fixedBody.find(firstTdChildrenSelector)
           .each(function(index) {
             helpers._fixHeightWithCss($(this), tableProps);
-            helpers._fixWidthWithCss($(this), tableProps, tdWidths[index % settings.fixedColumns] );
+            helpers._fixWidthWithCss($(this), tableProps, tdWidths[index % fixedColumns] );
           });
 
         // clone header
         headerRows.each(function () {
-            var $rowThs = $(this).find('> *:lt(' + settings.fixedColumns + ')');
+            var $rowThs = $(this).find('> *:lt(' + fixedColumns + ')');
             var $newRow = $('<tr></tr>').appendTo($thead.find('thead'));
 
             if (settings.altClass && $(this).parent().hasClass(settings.altClass)) {
@@ -464,7 +464,7 @@
           });
 
         $firstTdChildren.each(function(index) {
-          if (index % settings.fixedColumns == 0) {
+          if (index % fixedColumns == 0) {
             $newRow = $('<tr></tr>').appendTo($tbody.find('tbody'));
 
             if (settings.altClass && $(this).parent().hasClass(settings.altClass)) {
@@ -509,7 +509,7 @@
 
         // setup clone footer with fixed column
         if (settings.footer == true || settings.cloneHeadToFoot == true) {
-          var $firstTdFootChild = $fixedBody.find('.fht-tfoot tr > *:lt(' + settings.fixedColumns + ')'),
+          var $firstTdFootChild = $fixedBody.find('.fht-tfoot tr > *:lt(' + fixedColumns + ')'),
               footwidth;
 
           helpers._fixHeightWithCss($firstTdFootChild, tableProps);
