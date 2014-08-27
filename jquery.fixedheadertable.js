@@ -401,7 +401,9 @@
             $tfoot            = $('<div class="fht-tfoot"><table class="fht-table"><tfoot><tr></tr></tfoot></table></div>'),
             fixedBodyWidth    = $wrapper.width(),
             fixedBodyHeight   = $fixedBody.find('.fht-tbody').height() - settings.scrollbarOffset,
-            $firstThChildren,
+            fixedColumns      = settings.fixedColumns,
+            $firstRowThChildren,
+            $rowThs,
             $firstTdChildren,
             fixedColumnWidth,
             $newRow,
@@ -411,19 +413,26 @@
         $tbody.find('table.fht-table').addClass(settings.originalTable.attr('class'));
         $tfoot.find('table.fht-table').addClass(settings.originalTable.attr('class'));
 
-        $firstThChildren = $fixedBody.find('.fht-thead thead tr > *:lt(' + settings.fixedColumns + ')');
+        // calculate width of the fixed columns from first fixedColumns header columns.
+        $firstRowThChildren = $fixedBody.find('.fht-thead thead tr > *:lt(' + settings.fixedColumns + ')');
         fixedColumnWidth = settings.fixedColumns * tableProps.border;
-        $firstThChildren.each(function() {
+        $firstRowThChildren.each(function() {
           fixedColumnWidth += $(this).outerWidth(true);
         });
 
-        // Fix cell heights
-        helpers._fixHeightWithCss($firstThChildren, tableProps);
-        helpers._fixWidthWithCss($firstThChildren, tableProps);
-
         var tdWidths = [];
-        $firstThChildren.each(function() {
+        $firstRowThChildren.each(function() {
           tdWidths.push($(this).width());
+        });
+
+        // Fix cell heights, for each header row
+        var headerRows = $fixedBody.find('.fht-thead thead tr');
+        headerRows.each(function () {
+            var $rowThs = $(this).find('> *:lt(' + settings.fixedColumns + ')');
+            $rowThs.each(function (index) {
+                helpers._fixHeightWithCss($(this), tableProps);
+                helpers._fixWidthWithCss($(this), tableProps, tdWidths[index % settings.fixedColumns] );
+            });
         });
 
         firstTdChildrenSelector = 'tbody tr > *:not(:nth-child(n+' + (settings.fixedColumns + 1) + '))';
@@ -434,9 +443,19 @@
           });
 
         // clone header
-        $thead.appendTo($fixedColumn)
-          .find('tr')
-          .append($firstThChildren.clone());
+        headerRows.each(function () {
+            var $rowThs = $(this).find('> *:lt(' + settings.fixedColumns + ')');
+            var $newRow = $('<tr></tr>').appendTo($thead.find('thead'));
+
+            if (settings.altClass && $(this).parent().hasClass(settings.altClass)) {
+                $newRow.addClass(settings.altClass);
+            }
+
+            $rowThs.each(function (index) {
+                $(this).clone().appendTo($newRow);
+            });
+        });
+        $thead.appendTo($fixedColumn);
 
         $tbody.appendTo($fixedColumn)
           .css({
