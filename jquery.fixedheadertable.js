@@ -396,7 +396,7 @@
             $wrapper          = $self.closest('.fht-table-wrapper'),
             $fixedBody        = $wrapper.find('.fht-fixed-body'),
             $fixedColumn      = $wrapper.find('.fht-fixed-column'),
-            $thead            = $('<div class="fht-thead"><table class="fht-table"><thead><tr></tr></thead></table></div>'),
+            $thead            = $('<div class="fht-thead"><table class="fht-table"><thead></thead></table></div>'),
             $tbody            = $('<div class="fht-tbody"><table class="fht-table"><tbody></tbody></table></div>'),
             $tfoot            = $('<div class="fht-tfoot"><table class="fht-table"><tfoot><tr></tr></tfoot></table></div>'),
             fixedBodyWidth    = $wrapper.width(),
