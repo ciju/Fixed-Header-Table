@@ -356,14 +356,14 @@
       /*
        * return void
        */
-      _fixHeightWithCss: function ($obj, tableProps) {
+      _fixHeightWithCss: function ($obj, tableProps, excludeBorder) {
         if (settings.includePadding) {
           $obj.css({
             'height': $obj.height() + tableProps.border
           });
         } else {
           $obj.css({
-            'height': $obj.parent().height() + tableProps.border
+            'height': excludeBorder ? $obj.innerHeight() : $obj.outerHeight()
           });
         }
       },
@@ -438,7 +438,7 @@
         firstTdChildrenSelector = 'tbody tr > *:not(:nth-child(n+' + (fixedColumns + 1) + '))';
         $firstTdChildren = $fixedBody.find(firstTdChildrenSelector)
           .each(function(index) {
-            helpers._fixHeightWithCss($(this), tableProps);
+            helpers._fixHeightWithCss($(this), tableProps, index === 0);
             helpers._fixWidthWithCss($(this), tableProps, tdWidths[index % fixedColumns] );
           });
 
