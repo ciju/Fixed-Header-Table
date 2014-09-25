@@ -573,6 +573,10 @@
        * return object
        * Widths of each thead cell and tbody cell for the first rows.
        * Used in fixing widths for the fixed header and optional footer.
+       *
+       * NOTE: using last header row, for cases where first header row
+       * may have multi column headers. Probably better to find the
+       * row with most headers and use that.
        */
       _getTableProps: function($obj) {
         var tableProp = {
@@ -589,7 +593,7 @@
 
         tableProp.border = ($obj.find('th:first-child').outerWidth() - $obj.find('th:first-child').innerWidth()) / borderCollapse;
 
-        $obj.find('thead tr:first-child > *').each(function(index) {
+        $obj.find('thead tr:last-child > *').each(function(index) {
           tableProp.thead[index] = $(this).width() + tableProp.border;
         });
 
@@ -607,11 +611,15 @@
       /*
        * return void
        * Fix widths of each cell in the first row of obj.
+       *
+       * NOTE: using last header row, for cases where first header row
+       * may have multi column headers. Probably better to find the
+       * row with most headers and use that.
        */
       _setupClone: function($obj, cellArray) {
         var $self    = $obj,
             selector = ($self.find('thead').length) ?
-              'thead tr:first-child > *' :
+              'thead tr:last-child > *' :
               ($self.find('tfoot').length) ?
               'tfoot tr:first-child > *' :
               'tbody tr:first-child > *',
