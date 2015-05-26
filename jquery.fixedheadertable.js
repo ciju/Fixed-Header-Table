@@ -1,3 +1,8 @@
+// Local Variables:
+// js-indent-level: 2
+// indent-tabs-mode: nil
+// End:
+
 /*!
  * jquery.fixedHeaderTable. The jQuery fixedHeaderTable plugin
  *
@@ -28,6 +33,7 @@
       height:         '100%',
       themeClass:     'fht-default',
       borderCollapse:  true,
+      dontCalculateDimensionsForFixedColumns: false,
       fixedColumns:    0, // fixed first columns
       fixedColumn:     false, // For backward-compatibility
       sortable:        false,
@@ -436,11 +442,13 @@
         });
 
         firstTdChildrenSelector = 'tbody tr > *:not(:nth-child(n+' + (fixedColumns + 1) + '))';
-        $firstTdChildren = $fixedBody.find(firstTdChildrenSelector)
-          .each(function(index) {
+        $firstTdChildren = $fixedBody.find(firstTdChildrenSelector);
+        if (!settings.dontCalculateDimensionsForFixedColumns) {
+          $firstTdChildren.each(function(index) {
             helpers._fixHeightWithCss($(this), tableProps, index === 0);
             helpers._fixWidthWithCss($(this), tableProps, tdWidths[index % fixedColumns] );
           });
+        }
 
         // clone header
         headerRows.each(function () {
