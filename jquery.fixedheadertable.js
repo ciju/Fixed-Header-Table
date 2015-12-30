@@ -166,12 +166,6 @@
           tfootHeight = $tfoot.outerHeight(true);
         }
 
-        var tbodyHeight = $wrapper.height() - $thead.outerHeight(true) - tfootHeight - tableProps.border;
-
-        $divBody.css({
-          'height': tbodyHeight
-        });
-
         $self.addClass('fht-table-init');
 
         if (typeof(settings.altClass) !== 'undefined') {
@@ -181,6 +175,12 @@
         if (settings.fixedColumns > 0) {
           helpers._setupFixedColumn($self, self, tableProps);
         }
+
+        var tbodyHeight = $wrapper.height() - $self.closest('.fht-table-wrapper').find('thead').outerHeight(true) - tfootHeight - tableProps.border;
+
+        $divBody.css({
+          'height': tbodyHeight
+        });
 
         if (!settings.autoShow) {
           $wrapper.hide();
@@ -602,15 +602,15 @@
         tableProp.border = ($obj.find('th:first-child').outerWidth() - $obj.find('th:first-child').innerWidth()) / borderCollapse;
 
         $obj.find('thead tr:last-child > *').each(function(index) {
-          tableProp.thead[index] = $(this).width() + tableProp.border;
+          tableProp.thead[index] = $(this).outerWidth();
         });
 
         $obj.find('tfoot tr:first-child > *').each(function(index) {
-          tableProp.tfoot[index] = $(this).width() + tableProp.border;
+          tableProp.tfoot[index] = $(this).outerWidth();
         });
 
         $obj.find('tbody tr:first-child > *').each(function(index) {
-          tableProp.tbody[index] = $(this).width() + tableProp.border;
+          tableProp.tbody[index] = $(this).outerWidth();
         });
 
         return tableProp;
